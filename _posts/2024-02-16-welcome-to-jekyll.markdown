@@ -1,29 +1,21 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
-date:   2024-02-16 10:38:34 -0500
-categories: jekyll update
+title:  "List of annoying Android bugs you should know about"
+date:   2017-02-10
+categories: Android
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+There is a bug in Android where if you create a Custom drawable and don't overload the getConstantState() method, your app will crash when you call `layerDrawable.mutate();`
 
-`YEAR-MONTH-DAY-title.MARKUP`
+This caused our app to crash with the new `BottomNavigationView` because in the code for the drawable, it calls drawable.mutate(); to tint the selected buttons.
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+Hence why it's important to override `Drawable.getConstantState()`
+`drawableStart` and `drawableEnd` tint
 
-Jekyll also offers powerful support for code snippets:
+Yes there is a bug from Android 5.0 until 6.0 that was fixed in 7.0 where `drawableTint` doesn't apply on `drawableStart` and `drawableEnd`
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+Some solutions can be used
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+* Use drawableLeft `drawableRight` (You will get warnings about left to right support)
+* Set the drawable tint in code
+* Create multiple drawable resource for each colors
